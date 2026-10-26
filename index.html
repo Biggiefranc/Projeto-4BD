@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VSF</title>
+  </head>
+
+  <body>
+    <h2>Entre em Contato</h2>
+
+    <form action="#" method="POST">
+      <!-- Campo Nome -->
+      <div>
+        <label for="nome">Nome:</label>
+        <input
+          type="text"
+          id="nome"
+          name="nome"
+          placeholder="Digite seu nome completo"
+          required
+        />
+      </div>
+      <br />
+
+      <!-- Campo E-mail -->
+      <div>
+        <label for="email">E-mail:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="seu.email@exemplo.com"
+          required
+        />
+      </div>
+      <br />
+
+      <!-- Campo Assunto -->
+      <div>
+        <label for="assunto">Assunto:</label>
+        <select id="assunto" name="assunto">
+          <option value="duvida">Dúvida</option>
+          <option value="sugestao">Sugestão</option>
+          <option value="suporte">Suporte Técnico</option>
+        </select>
+      </div>
+      <br />
+
+      <!-- Campo Mensagem -->
+      <div>
+        <label for="mensagem">Mensagem:</label><br />
+        <textarea
+          id="mensagem"
+          name="mensagem"
+          rows="5"
+          cols="30"
+          placeholder="Escreva sua mensagem aqui..."
+          required
+        ></textarea>
+      </div>
+      <br />
+
+      <!-- Botão de Enviar -->
+      <button type="submit">Enviar Mensagem</button>
+    </form>
+  </body>
+</html>
