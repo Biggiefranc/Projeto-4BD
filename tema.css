@@ -1,0 +1,84 @@
+:root {
+  --primary: #254d32;
+  --secondary: #527a45;
+  --accent: #a8bd86;
+  /* FUNDOS */
+  --background: #f5f0e4;
+  --surface: #ffffff;
+  --surface-secondary: #e5d8bd;
+  /* TEXTOS */
+  --text-primary: #292d26;
+  --text-secondary: #686f61;
+  --text-light: #ffffff;
+  /* DETALHES */
+  --earth: #79553a;
+  --border: #d9d5c8;
+  /* BOTÕES */
+  --button-bg: #254d32;
+  --button-hover: #527a45;
+  --button-text: #ffffff;
+  /* SOMBRAS */
+  --shadow: 0 4px 15px rgba(37, 77, 50, 0.1);
+  /* BORDAS */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+}
+
+/* CONFIGURAÇÕES GERAIS */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: Arial, sans-serif;
+}
+
+/* BOTÕES */
+
+button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px 22px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: var(--button-hover);
+}
+
+/* CARDS */
+
+.card {
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+/* TÍTULOS */
+
+h1,
+h2,
+h3 {
+  color: var(--primary);
+}
+
+/* LINKS */
+
+a {
+  color: var(--secondary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary);
+}
