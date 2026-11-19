@@ -1,98 +1,131 @@
--- MySQL Workbench Forward Engineering
+CREATE DATABASE IF NOT EXISTS buscador_lojas
+CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+USE buscador_lojas;
 
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
+-- =====================================
+-- TABELA LOJAS
+-- =====================================
 
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE TABLE IF NOT EXISTS lojas (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    origem ENUM('osm','cadastro') NOT NULL DEFAULT 'cadastro',
+    osm_id VARCHAR(20) NULL UNIQUE,
+    nome VARCHAR(255) NOT NULL,
+    descricao TEXT NULL,
+    tipo VARCHAR(60) NOT NULL DEFAULT 'Loja natural',
+    rua VARCHAR(45),
+    cep CHAR(8) NULL,
+    cidade VARCHAR(120) NULL,
+    uf CHAR(2) NULL,
+    lat DOUBLE NOT NULL,
+    lon DOUBLE NOT NULL,
+    site VARCHAR(400) NULL,
+    horario VARCHAR(400) NULL,
 
--- -----------------------------------------------------
--- Table `mydb`.`Cliente`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Cliente` (
-  `ID` INT NOT NULL,
-  `nome` VARCHAR(45) NOT NULL,
-  `email` VARCHAR(45) NOT NULL,
-  `senha` VARCHAR(45) NOT NULL,
-  `rua` VARCHAR(45) NOT NULL,
-  `num` INT NOT NULL,
-  `bairro` VARCHAR(45) NOT NULL,
-  `cidade` VARCHAR(45) NOT NULL,
-  `CEP` INT NOT NULL,
-  `logradouro` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`ID`))
-ENGINE = InnoDB;
+    INDEX idx_lojas_coord (lat, lon),
+  
 
-
--- -----------------------------------------------------
--- Table `mydb`.`Loja`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Loja` (
-  `ID` INT NOT NULL,
-  `nome` VARCHAR(45) NOT NULL,
-  `rua` VARCHAR(45) NOT NULL,
-  `num` INT NOT NULL,
-  `bairro` VARCHAR(45) NOT NULL,
-  `cidade` VARCHAR(45) NOT NULL,
-  `CEP` INT NOT NULL,
-  `logradouro` VARCHAR(45) NOT NULL,
-  `descricao` VARCHAR(45) NULL,
-  `hor_atendimento` DATETIME NOT NULL,
-  PRIMARY KEY (`ID`))
-ENGINE = InnoDB;
+    CONSTRAINT fk_lojas_cep
+        FOREIGN KEY (cep) REFERENCES ceps(cep)
+);
 
 
--- -----------------------------------------------------
--- Table `mydb`.`Produto`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Produto` (
-  `nome` VARCHAR(45) NOT NULL,
-  `descricao` VARCHAR(45) NOT NULL,
-  `preco` INT NOT NULL,
-  `ID_Loja` INT NOT NULL,
-  PRIMARY KEY (`ID_Loja`))
-ENGINE = InnoDB;
+-- =====================================
+-- TABELA TELEFONES
+-- =====================================
+
+CREATE TABLE IF NOT EXISTS telefones (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_loja INT UNSIGNED NOT NULL,
+    numero VARCHAR(40) NOT NULL,
+
+    UNIQUE KEY uq_telefone (id_loja, numero),
+
+    CONSTRAINT fk_telefones_loja
+        FOREIGN KEY (id_loja)
+        REFERENCES lojas(id)
+        ON DELETE CASCADE
+);
 
 
--- -----------------------------------------------------
--- Table `mydb`.`Categoria`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Categoria` (
-  `ID_Loja` INT NOT NULL,
-  `ID_Cliente` INT NOT NULL,
-  `graos_cereais` VARCHAR(45) NULL,
-  `oleaginosas_sementes` VARCHAR(45) NULL,
-  `ervas` VARCHAR(45) NULL,
-  `temperos` VARCHAR(45) NULL,
-  `especiarias` VARCHAR(45) NULL,
-  `frutas_secas_desidratadas` VARCHAR(45) NULL,
-  `adocantes` VARCHAR(45) NULL,
-  `fontes_energias_naturais` VARCHAR(45) NULL,
-  `chas` VARCHAR(45) NULL,
-  `infusoes` VARCHAR(45) NULL,
-  `suplementos_funcionais` VARCHAR(45) NULL,
-  PRIMARY KEY (`ID_Loja`, `ID_Cliente`))
-ENGINE = InnoDB;
+-- =====================================
+-- TABELA CATEGORIAS_PRODUTOS
+-- =====================================
+
+CREATE TABLE IF NOT EXISTS categorias_prod (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(80) NOT NULL UNIQUE
+);
 
 
--- -----------------------------------------------------
--- Table `mydb`.`Telefone`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Telefone` (
-  `ID_Telefone` INT NOT NULL,
-  `ID_Loja` INT NOT NULL,
-  PRIMARY KEY (`ID_Telefone`, `ID_Loja`))
-ENGINE = InnoDB;
+INSERT IGNORE INTO categorias_prod (nome) VALUES
+('Roupas femininas'),
+('Roupas masculinas'),
+('Calçados'),
+('Acessorios'),
+('Sala'), 
+('Quarto'), 
+('Cozinha'), 
+('Banheiro'), 
+('Smartphone/tablets'), 
+('Computador/Notebook'), 
+('Audio/Video'), 
+('Games'), 
+('Skincare'), 
+('Cabelos'), 
+('Maquiagem'), 
+('Perfumaria'), 
+('Mercearia'), 
+('Bebidas'), 
+('Laticínios/Frios'), 
+('Hortifrúti'), 
+('Fitness/Musculação'), 
+('Esportes Coletivos'), 
+('Camping/Aventura');
 
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+-- =====================================
+-- TABELA PRODUTOS
+-- =====================================
+
+CREATE TABLE IF NOT EXISTS produtos (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_loja INT UNSIGNED NOT NULL,
+    id_categoria INT UNSIGNED NULL,
+    nome VARCHAR(120) NOT NULL,
+    descricao VARCHAR(400) NULL,
+    preco DECIMAL(10,2) NOT NULL,
+
+    CONSTRAINT fk_produtos_loja
+        FOREIGN KEY (id_loja)
+        REFERENCES lojas(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_produtos_categoria
+        FOREIGN KEY (id_categoria)
+        REFERENCES categorias(id)
+        ON DELETE SET NULL
+);
+
+-- =====================================
+-- TABELA CATEGORIAS_LOJA
+-- =====================================
+
+CREATE TABLE IF NOT EXISTS categorias_Loja (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(80) NOT NULL UNIQUE
+);
+
+INSERT IGNORE INTO categorias_Loja (nome) VALUES
+('Moda/vestuario'),
+('Casa/decoração'), 
+('Eletronicos/tecnologia'), 
+('Beleza/cuidados pessoais'),
+('Alimentos/bebidas'),
+('Esporte e lazer'); 
+
+
+
