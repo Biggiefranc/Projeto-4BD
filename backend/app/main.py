@@ -1,14 +1,24 @@
 from fastapi import FastAPI
-
-# Cria a instância da aplicação (igual ao const app = express())
 app = FastAPI()
 
-# Define uma rota GET (igual ao app.get('/', ...))
+#Servidor rodando.
 @app.get("/")
 def inicio():
-    return {"mensagem": "API rodando!"}
+    return {"mensagem": "API rodando"}
 
-# Rota com parâmetro na URL (igual ao /usuarios/:id no Express)
 @app.get("/usuarios/{user_id}")
 def buscar_usuario(user_id: int):
     return {"id": user_id, "nome": "Robert"}
+
+def get_db():
+    #Função para obter a conexão com o banco de dados.
+    connection = mysql.connector.connect(
+        host= "localhost",
+        user="root",
+        password="",
+        database=""
+    )
+    try:
+        yield connection #Garante que a conexão esteja pronta para a rota usar.
+    finally:
+        connection.close() #Garante que ela feche assim que terminar.
