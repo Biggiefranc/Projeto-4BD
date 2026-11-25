@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from .schemas import Item, ItemCreate
-from . import service
+from .itens import service
 
 router = APIRouter(prefix="/itens", tags=["Itens"])
 
