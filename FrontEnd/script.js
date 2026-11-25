@@ -1,20 +1,3 @@
-const API_URL = "http://127.0.0.1:8000";
-
-const categorias = [
-  "Todas",
-  "Moda",
-  "Casa e Decoração",
-  "Eletrônicos",
-  "Beleza",
-  "Alimentos e Bebidas",
-  "Esporte e Lazer",
-  "Turismo",
-  "Serviços",
-  "Outros",
-];
-
-let categoriaAtiva = "Todas";
-
 // ELEMENTOS DA TELA
 
 const form = document.getElementById("formBusca");
