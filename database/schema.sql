@@ -547,6 +547,3 @@ INNER JOIN categorias_loja AS c
 WHERE c.nome = 'Moda'
 AND l.cidade = 'Fortaleza';
 
--- =====================================================
--- FIM DA CRIAÇÃO DO BANCO DE DADOS
--- =====================================================
